@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="web-service-wsimport" basedir="." default="war">
+
+    <property name="src.dir" value="src"/>
+    <property name="classes.dir" value="build/classes"/>
+    <property name="web.lib" value="WebContent/WEB-INF/lib"/>
+    
+    <target name="init">
+		<mkdir dir="build/classes"/>
+		<mkdir dir="dist" />
+	</target>
+    
+    <target name="compile" description="Compiles the Task">   
+        <javac destdir="${classes.dir}" debug="true" srcdir="${src.dir}" includeantruntime="true">
+			<classpath refid="compile.classpath"/>
+		</javac>
+    </target>
+    
+    <taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport" >
+	</taskdef>
+                                
+     <target name="wsimport" >  
+    	<wsimport  wsdl="http://localhost:3030/add?wsdl"
+    	       destdir="${classes.dir}" 
+    	       sourcedestdir="${src.dir}"
+    	       verbose="true"
+    	       keep="true">
+    	</wsimport>
+    </target>  
+    
+    <target name="war" >
+		<war destfile="dist/${ant.project.name}.war" webxml="WebContent/WEB-INF/glassfish-web.xml">
+			<fileset dir="WebContent"/>
+			<lib dir="${web.lib}"/>
+			<classes dir="${classes.dir}"/>
+		</war>
+	</target>
+    
+    <target name="clean" description="Delete all generated files">
+        <delete dir="${classes.dir}" failonerror="false"/>
+        <delete file="dist/${ant.project.name}.war"/>
+    </target>
+
+    
+</project>
